@@ -393,6 +393,30 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
                                   ],
                                 ),
                                 SizedBox(height: 8),
+                                Wrap(
+                                  children: [
+                                    Image.asset(
+                                      'lib/assets/imagenes/git.png',
+                                      width: 50,
+                                      height: 25,
+                                    ),
+                                    SizedBox(width: 4),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await launch("https://github.com/DaniDev2003");
+                                      },
+                                      child: Text(
+                                        'DaniDev2003',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8),
                               ],
                             ),
                               ),
@@ -618,6 +642,29 @@ class _HomepageState extends State<Homepage> with SingleTickerProviderStateMixin
                                       fontSize: 16,
                                     ),
                                   ),
+                                  Wrap(
+                                    children: [
+                                      Image.asset(
+                                        'lib/assets/imagenes/git.png',
+                                        width: 50,
+                                        height: 25,
+                                      ),
+                                      SizedBox(width: 4),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await launch("https://github.com/DaniDev2003");
+                                        },
+                                        child: Text(
+                                          'DaniDev2003',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            decoration: TextDecoration.underline,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   SizedBox(height: 6),
                                   Wrap(
                                     spacing: screenWidth * 0.01,
@@ -773,10 +820,8 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
   void initState() {
     super.initState();
 
-    // Definir cuántos objetos animados habrá
-    int numItems = 3; // Cambia este valor según la cantidad de objetos
+    int numItems = 3;
 
-    // Crear controladores de animación
     _slideControllers = List.generate(numItems, (index) => AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
@@ -792,37 +837,38 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
       duration: const Duration(seconds: 1),
     ));
 
-    // Crear lista de animaciones deslizantes
     _slideAnimations = List.generate(numItems, (index) => Tween<Offset>(
-      begin: const Offset(-10.0, 0.0), // Fuera de la pantalla
-      end: Offset.zero, // Posición final
+      begin: const Offset(-10.0, 0.0),
+      end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _slideControllers[index], // Vinculado al controlador correcto
+      parent: _slideControllers[index],
       curve: Curves.easeInOut,
     )));
 
-    // Crear lista de animaciones de fade-in
     _fadeAnimations = List.generate(numItems, (index) => Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _fadeControllers[index], // Vinculado al controlador correcto
+      parent: _fadeControllers[index],
       curve: Curves.easeInOut,
     )));
 
-    // Crear animaciones de fade-out para las flechas
     _arrowFadeAnimations = List.generate(numItems, (index) => Tween<double>(
-      begin: 1.0, // Flecha visible
-      end: 0.0, // Flecha desaparece
+      begin: 1.0,
+      end: 0.0,
     ).animate(CurvedAnimation(
       parent: _arrowFadeControllers[index],
       curve: Curves.easeInOut,
     )));
 
-    // Add scroll listener to trigger animations
     widget.scrollController.addListener(_onScroll);
-    _onScroll();
+
+    // 👇 Esto espera a que todo se haya renderizado antes de chequear el scroll
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onScroll();
+    });
   }
+
 
   @override
   void dispose() {
@@ -1033,13 +1079,12 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
             ) : SizedBox(),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, // Alineación similar al primer ejemplo
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded( // Para que el contenido ocupe el espacio disponible
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         //Habilidades tecnicas
                         Container(
                           key: habilidadesKey,
@@ -1055,9 +1100,7 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                   shaderCallback: (bounds) => LinearGradient(
                                     colors: titulo,
                                   ).createShader(bounds),
-                                  child:                               Offstage(
-                                    offstage: screenHeight > screenWidth ? offset < 80 : false, // Si el offset es menor a 260, no se renderiza
-                                    child: SlideTransition(
+                                  child: SlideTransition(
                                     position: _slideAnimations[0],
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -1071,12 +1114,9 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                       ),
                                     ),
                                   ),
-                                  ),
                                 ),
                               ),
-                  Offstage(
-                      offstage: screenHeight > screenWidth ? offset < 80 : false, // Si el offset es menor a 260, no se renderiza
-                      child: FadeTransition(
+                                FadeTransition(
                                   opacity: _fadeAnimations[0],
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -1181,7 +1221,6 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                     ],
                                   )
                                 ),
-                  )
                               ]
                           ),
                         ),
@@ -1201,9 +1240,7 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                             mainAxisSize: MainAxisSize.min,
                             key: GlobalKey(),
                             children: [
-                              Offstage(
-                                offstage: screenHeight < screenWidth ? offset < 260 : offset < 640, // Si el offset es menor a 260, no se renderiza
-                                child: Row(
+                               Row(
                                   children: [
                                     Expanded(
                                       child: Row(
@@ -1218,7 +1255,6 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                     ),
                                   ],
                                 ),
-                              ),
 
                               Padding(
                               padding: EdgeInsets.only(left: 12,),
@@ -1227,9 +1263,7 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                   colors: titulo,
                                 ).createShader(bounds),
                                 child:
-                                Offstage(
-                                  offstage: screenHeight < screenWidth ? offset < 260 : offset < 640, // Si el offset es menor a 260, no se renderiza
-                                  child: SlideTransition(
+                               SlideTransition(
                                   position: _slideAnimations[1],
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -1243,12 +1277,9 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                     ),
                                   ),
                                 ),
-                                ),
                               ),
                             ),
-                          Offstage(
-                            offstage: screenHeight < screenWidth ? offset < 260 : offset < 640, // Si el offset es menor a 260, no se renderiza
-                            child: FadeTransition(
+                           FadeTransition(
                                 opacity: _fadeAnimations[1],
                                   child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -1367,7 +1398,6 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                     ],
                                 ),
                                 ),
-                          ),
                             ],
                           ),
                         ),
@@ -1392,13 +1422,10 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                   Expanded(child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                  Offstage(
-                                  offstage: screenHeight > screenWidth ? offset < 2140 : offset < 1050, // Si el offset es menor a 260, no se renderiza
-                                    child: FadeTransition(
+                                  FadeTransition(
                                         opacity: _arrowFadeAnimations[1], // Flecha desaparece con el scroll
                                         child: Icon(Icons.keyboard_arrow_down, size: 40, color: Colors.grey),
                                       ),
-                                  ),
                                     ],
                                   ))
                                 ],
@@ -1410,9 +1437,7 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                   colors: titulo,
                                 ).createShader(bounds),
                                 child:
-                                Offstage(
-                                  offstage: screenHeight > screenWidth ? offset < 2140 : offset < 1050, // Si el offset es menor a 260, no se renderiza
-                                  child: SlideTransition(
+                                SlideTransition(
                                   position: _slideAnimations[2],
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -1426,12 +1451,9 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                     ),
                                   ),
                                 ),
-                                ),
                               ),
                             ),
-                  Offstage(
-                    offstage: screenHeight > screenWidth ? offset < 2140 : offset < 1050, // Si el offset es menor a 260, no se renderiza
-                    child: FadeTransition(
+                            FadeTransition(
                                 opacity: _fadeAnimations[2],
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -1535,9 +1557,8 @@ class _InformacionState extends State<Informacion> with TickerProviderStateMixin
                                   ],
                                 ),
                               ),
-                  ),
                             ],
-    ),
+                          ),
                         ),
                       ]
                   ),
@@ -1644,6 +1665,149 @@ class _ScrollableContainerState extends State<ScrollableContainer> {
   final ScrollController _horizontalscrollController = ScrollController(); // Controlador de scroll
 
   List<Widget> detallesProyectos = [
+    //detalles S.A.N.A.S
+    Padding(padding: EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: proyecto,
+                        ).createShader(bounds),
+                        child: Text(
+                          "S.A.N.A.S",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Para un backup color en caso que no se vea bien el degradado
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 8),
+                Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: proyecto,
+                        ).createShader(bounds),
+                        child: Text(
+                          "Plataforma: ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Para un backup color en caso que no se vea bien el degradado
+                          ),
+                        ),
+                      ),
+                      Text("Aplicación móvil, disponible en PlayStore", style: TextStyle(fontSize: 16, color: Colors.white, // Para un backup color en caso que no se vea bien el degradado),
+                      ),),
+                    ]
+                ),
+                SizedBox(height: 4),
+                Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: proyecto,
+                        ).createShader(bounds),
+                        child: Text(
+                          "Tecnologías clave: ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white, // Para un backup color en caso que no se vea bien el degradado
+                          ),
+                        ),
+                      ),
+                      Text("Firestore, Google In-App Purchase, Firebase Notifications, Firebase Storage", style: TextStyle(fontSize: 16, color: Colors.white, // Para un backup color en caso que no se vea bien el degradado),
+                      ),),
+                    ]
+                ),
+                SizedBox(height: 4),
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: proyecto,
+                  ).createShader(bounds),
+                  child: Text(
+                    "Puntos a destacar: ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // Para un backup color en caso que no se vea bien el degradado
+                    ),
+                  ),
+                ),
+                Text("   ---Recomendación de dietas personalizadas mediante algoritmo basado en peso, altura, tipo corporal (ectomorfo, endomorfo, mesomorfo) e IMC.", style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text("   ---Gestión colaborativa de historias clínicas con permisos de visualización y edición entre usuarios (familiares o profesionales de salud).", style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text("   ---Sección exclusiva para embarazadas con registro del proceso de gestación, síntomas, análisis, diagnósticos y traspaso de datos al perfil del bebé.", style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text("   ---Cálculo automático de nutrientes, calorías e hidratación diaria según lo registrado por el usuario.", style: TextStyle(fontSize: 16, color: Colors.white)),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: proyecto,
+                      ).createShader(bounds),
+                      child: Text(
+                        "Descripción: ",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // Para un backup color en caso que no se vea bien el degradado
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text("      SANAS es una aplicación integral de salud personal y gestión médica colaborativa. Permite registrar historias clínicas digitales, documentos médicos, recetas y análisis, además de ofrecer recomendaciones alimenticias inteligentes basadas en peso, altura, tipo corporal e IMC. "
+                    "Los usuarios pueden compartir sus perfiles médicos con familiares o profesionales de salud, asignando permisos de visualización o edición según sea necesario. Incluye una sección exclusiva para embarazadas donde se registra todo el proceso de gestación y salud materna, trasladando luego esos datos al perfil del bebé. "
+                    "La app también calcula de forma automática nutrientes, calorías e hidratación según los alimentos ingresados. SANAS se orienta a una trazabilidad completa de la salud desde el embarazo hasta la adultez, integrando cuidado personal y asistencia profesional en un solo lugar. "
+                    "Funciona sobre Firestore, donde cada cambio en la historia clínica o registro nutricional puede disparar eventos automatizados a través de Cloud Functions, incluyendo notificaciones push enviadas mediante claves FMC a los contactos autorizados o profesionales que hacen seguimiento.",
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
+                SizedBox(height: 6),
+                GestureDetector(
+                  onTap: () async {
+                    await launch("https://play.google.com/store/apps/details?id=com.sanas.mobileapp&hl=es_AR");
+                  },
+                  child: Text(
+                    "O descarga S.A.N.A.S haciendo clic aquí.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),),
+        ],
+      ),
+    ),
+
     //detalles alerta familiar
     Padding(padding: EdgeInsets.all(16),
     child: Row(
@@ -1716,7 +1880,7 @@ class _ScrollableContainerState extends State<ScrollableContainer> {
                   ),
                 ),
               ),
-              Text("Firestore, Funciones en la nube (JavaScript), Google In-App Purchase, Firebase Notifications", style: TextStyle(fontSize: 16, color: Colors.white, // Para un backup color en caso que no se vea bien el degradado),
+              Text("Firestore, Funciones en la nube (Java), Google In-App Purchase, Firebase Notifications", style: TextStyle(fontSize: 16, color: Colors.white, // Para un backup color en caso que no se vea bien el degradado),
               ),),
             ]
         ),
@@ -2486,6 +2650,11 @@ class _ScrollableContainerState extends State<ScrollableContainer> {
 
   List<Map<String, String>> proyectos = [
     {
+      "nombre": "S.A.N.A.S",
+      "imagen1": "lib/assets/Sanas/Imagen_de_WhatsApp_2024-12-23_a_las_18.58.24_c192adfd-removebg.png",
+      "imagen2": "lib/assets/Sanas/2.png"
+    },
+    {
       "nombre": "Alerta familiar!",
       "imagen1": "lib/assets/alerta-familiar/ic_launcher.png",
       "imagen2": "lib/assets/alerta-familiar/IMG-20241004-WA0023.jpg"
@@ -2519,6 +2688,12 @@ class _ScrollableContainerState extends State<ScrollableContainer> {
 
   // Definimos una lista de mapas que contendrá la información de cada proyecto
   List<Map<String, dynamic>> imagenesProyecto = [
+    //S.A.N.A.S
+    {
+      'imagenes': [
+        {'imagen1': 'lib/assets/Sanas/menu principal.png', 'descripcion1': 'Aca tenemos algunas de las secciones y funciones mas destacadas de la aplicacion.', 'imagen2': 'lib/assets/Sanas/2.png', 'descripcion2': 'Imagen de presentacion de la app completa disponible en playstore'},
+     ],
+    },
     //alerta familiar
     {
       'imagenes': [
