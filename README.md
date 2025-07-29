@@ -1,16 +1,7 @@
 # daniel_balcedo_dev_cv
 
-A new Flutter project.
+Personal CV in Flutter
 
-## Getting Started
+This project was created with the goal of building a responsive webpage for both desktop and mobile devices using Flutter.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The main focus of this project is dynamic design, background calculations, and animations.
